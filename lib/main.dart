@@ -1,74 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:solid_flutter_learn/debug_logger.dart';
+import 'package:solid_flutter_learn/shape.dart';
+import 'package:solid_flutter_learn/utils.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+Shape currShape = NullShape();
 
-  // This widget is the root of your application.
+final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+  minimumSize: const Size(88, 36),
+  padding: const EdgeInsets.symmetric(horizontal: 16),
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(2)),
+  ),
+);
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Factory Method Pattern',
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    // todo 4
-    final logger = DebugLogger();
-    setState(() {
-      _counter++;
-
-      // todo 5 (finish)
-      logger.log('counter : $_counter', 'sample error message');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Factory Method Pattern'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      body: ListView(children: <Widget>[
+        Text(
+          currShape.getName,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        SizedBox(
+          width: 400,
+          height: 400,
+          child: CustomPaint(
+            painter: CanvasPainter(),
+          ),
+        ),
+        ElevatedButton(
+          style: raisedButtonStyle,
+          child: const Text('Generate New Random Shape'),
+          onPressed: () {
+            setState(() {
+              currShape = Utils.generateRandomShape(const Size(400, 400));
+            });
+          },
+        ),
+      ]),
     );
   }
+}
+
+class CanvasPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    currShape.draw(canvas);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
