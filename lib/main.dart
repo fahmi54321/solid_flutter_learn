@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:solid_flutter_learn/pizza.dart';
+import 'package:solid_flutter_learn/list_with_separator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,41 +31,44 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  PizzaDirector director = PizzaDirector();
-
-  PizzaBuilder hawaiianPizzaBuilder = HawaiianPizzaBuilder();
-  PizzaBuilder newYorkPizzaBuilder = NewYorkPizzaBuilder();
-
-  void buildPizza() {
-    setState(() {
-      _counter++;
-
-      if (_counter % 2 == 0) {
-        director.setPizzaBuilder(hawaiianPizzaBuilder);
-        director.makePizza();
-        Pizza myPizza = director.getPizza();
-        debugPrint(myPizza.toString());
-      } else {
-        director.setPizzaBuilder(newYorkPizzaBuilder);
-        director.makePizza();
-        Pizza myPizza = director.getPizza();
-        debugPrint(myPizza.toString());
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Builder Pattern'),
-      ),
-      body: ElevatedButton(
-        style: raisedButtonStyle,
-        onPressed: buildPizza,
-        child: const Text('Generate New Random Shape'),
+        title: const Text('Adapter Patterns'),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem<int>(
+                  value: 0,
+                  child: Text('XML Contacts'),
+                ),
+                const PopupMenuItem<int>(
+                  value: 1,
+                  child: Text('JSON Contacts'),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              if (value == 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => XMLLongListWithSeparator(),
+                  ),
+                );
+              } else if (value == 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => JSONLongListWithSeparator(),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }
