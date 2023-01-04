@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:solid_flutter_learn/list_with_separator.dart';
+import 'package:solid_flutter_learn/main_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,58 +18,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Factory Method Pattern',
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Adapter Patterns'),
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (context) {
-              return [
-                const PopupMenuItem<int>(
-                  value: 0,
-                  child: Text('XML Contacts'),
-                ),
-                const PopupMenuItem<int>(
-                  value: 1,
-                  child: Text('JSON Contacts'),
-                ),
-              ];
-            },
-            onSelected: (value) {
-              if (value == 0) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => XMLLongListWithSeparator(),
-                  ),
-                );
-              } else if (value == 1) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => JSONLongListWithSeparator(),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-      ),
+      home: MainPage(),
     );
   }
 }
