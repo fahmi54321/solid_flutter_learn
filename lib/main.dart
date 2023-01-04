@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:solid_flutter_learn/shape.dart';
-import 'package:solid_flutter_learn/utils.dart';
+import 'package:solid_flutter_learn/pizza.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
-Shape currShape = NullShape();
 
 final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
   minimumSize: const Size(88, 36),
@@ -34,45 +31,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+
+  PizzaDirector director = PizzaDirector();
+
+  PizzaBuilder hawaiianPizzaBuilder = HawaiianPizzaBuilder();
+  PizzaBuilder newYorkPizzaBuilder = NewYorkPizzaBuilder();
+
+  void buildPizza() {
+    setState(() {
+      _counter++;
+
+      if (_counter % 2 == 0) {
+        director.setPizzaBuilder(hawaiianPizzaBuilder);
+        director.makePizza();
+        Pizza myPizza = director.getPizza();
+        debugPrint(myPizza.toString());
+      } else {
+        director.setPizzaBuilder(newYorkPizzaBuilder);
+        director.makePizza();
+        Pizza myPizza = director.getPizza();
+        debugPrint(myPizza.toString());
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Factory Method Pattern'),
+        title: const Text('Builder Pattern'),
       ),
-      body: ListView(children: <Widget>[
-        Text(
-          currShape.getName,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20),
-        ),
-        SizedBox(
-          width: 400,
-          height: 400,
-          child: CustomPaint(
-            painter: CanvasPainter(),
-          ),
-        ),
-        ElevatedButton(
-          style: raisedButtonStyle,
-          child: const Text('Generate New Random Shape'),
-          onPressed: () {
-            setState(() {
-              currShape = Utils.generateRandomShape(const Size(400, 400));
-            });
-          },
-        ),
-      ]),
+      body: ElevatedButton(
+        style: raisedButtonStyle,
+        onPressed: buildPizza,
+        child: const Text('Generate New Random Shape'),
+      ),
     );
   }
-}
-
-class CanvasPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    currShape.draw(canvas);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
